@@ -1,11 +1,11 @@
-require 'watir'
-
-Before do |scenario|
-  DataMagic.load_for_scenario(scenario)
-  @browser = Watir::Browser.new :chrome
+Before do
+  puts 'Inicio da Execucao'
 end
 
-
-After do
-  @browser.close
+After do |scenario|
+  if scenario.failed?
+    shot_file = driver.screenshot("features/report/tela_de_erro.png")
+    shot_b64 = Base64.encode64(File.open(shot_file, "rb").read)
+    embed(shot_b64, "image/png", "Screenshot") # Cucumber anexa o screenshot no report
+  end
 end
